@@ -84,19 +84,18 @@ function Menus({ children }) {
   );
 }
 
-Menus.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
 function Toggle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    e.stopPropagation();
+
     const rect = e.target.closest("button").getBoundingClientRect();
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
     });
+
     openId === "" || openId !== id ? open(id) : close();
   }
 
@@ -107,13 +106,9 @@ function Toggle({ id }) {
   );
 }
 
-Toggle.propTypes = {
-  id: PropTypes.string.isRequired,
-};
-
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick(close, false);
 
   if (openId !== id) return null;
 
@@ -124,11 +119,6 @@ function List({ id, children }) {
     document.body
   );
 }
-
-List.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
 
 function Button({ children, icon, onClick }) {
   const { close } = useContext(MenusContext);
@@ -141,16 +131,30 @@ function Button({ children, icon, onClick }) {
   return (
     <li>
       <StyledButton onClick={handleClick}>
-        {icon} <span>{children}</span>
+        {icon}
+        <span>{children}</span>
       </StyledButton>
     </li>
   );
 }
 
+Menus.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+List.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+Toggle.propTypes = {
+  id: PropTypes.string.isRequired,
+};
+
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   icon: PropTypes.node.isRequired,
-  onClick: PropTypes.node.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 Menus.Menu = Menu;

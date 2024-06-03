@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import Tag from "../../ui/Tag";
 import { Flag } from "../../ui/Flag";
@@ -51,5 +52,18 @@ function TodayItem({ activity }) {
     </StyledTodayItem>
   );
 }
+
+TodayItem.propTypes = {
+  activity: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    status: PropTypes.oneOf(["unconfirmed", "checked-in"]).isRequired,
+    guests: PropTypes.shape({
+      countryFlag: PropTypes.string.isRequired,
+      country: PropTypes.string.isRequired,
+      fullName: PropTypes.string.isRequired,
+    }).isRequired,
+    numNights: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default TodayItem;
